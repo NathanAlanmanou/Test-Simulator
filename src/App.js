@@ -50,9 +50,29 @@ const App = () => {
   };
 
   const submitTest = () => {
-    // Handle test submission
-    setPage('thankyou');
-    console.log('Answers:', answers); // You can send this array to the server for recording or further processing
+
+    const elapsedTime = 7200 - timer; // get time remaining
+  
+    fetch('/api/answers', {
+      method: 'POST', 
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email: 'test@example.com',
+        answers: answers,
+        elapsedTime: elapsedTime
+      })
+    })
+    .then(response => {
+      if (response.ok) {
+        console.log('Answers saved!'); 
+      }
+    }) 
+    .catch(error => {
+      console.log(error);
+    });
+  
   };
 
   const renderPage = () => {
