@@ -52,7 +52,7 @@ const App = () => {
   const submitTest = () => {
 
     const elapsedTime = 7200 - timer; // get time remaining
-  
+    setPage('thankyou');
     fetch('/api/answers', {
       method: 'POST', 
       headers: {
