@@ -5,11 +5,11 @@ const app = express();
 
 // PostgreSQL connection config
 const pgConfig = {
-  user: 'username',
-  host: 'localhost',
-  database: 'mydb',
-  password: 'password',
-  port: 5432
+    user: 'postgres',
+    host: 'localhost',
+    database: 'testsimulator',
+    password: 'Feraliwinner',
+    port: 5432,
 };
 
 // Connect to PostgreSQL
@@ -22,7 +22,7 @@ app.post('/api/answers', (req, res) => {
   
   // Save to database
   pool.query(
-    'INSERT INTO test_entries (answers) VALUES ($1)',
+    'INSERT INTO public."Test Entries" (answers) VALUES ($1)',
     [JSON.stringify(answers)],
     (err, result) => {
       // send response
