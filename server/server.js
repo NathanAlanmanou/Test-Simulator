@@ -16,20 +16,21 @@ const pgConfig = {
 const pool = new pg.Pool(pgConfig);
 
 // API route to save answers
-app.post('/api/answers', (req, res) => {
-  // Get answers from request
-  const answers = req.body.answers; 
-  
-  // Save to database
-  pool.query(
-    'INSERT INTO public."Test Entries" (answers) VALUES ($1)',
-    [JSON.stringify(answers)],
-    (err, result) => {
-      // send response
-    }
-  );
-});
 
-app.listen(5000, () => {
-  console.log('Server listening on port 5000');
-});
+app.post('/api/answers', (req, res) => {
+  
+    const { email, answers, elapsedTime } = req.body;
+    
+    pool.query(
+      `INSERT INTO Test_Entries (Student_Email, Test_ID, Time_Elapsed, Answer_1, Answer_2, Answer_3, Answer_4, Answer_5) 
+       VALUES ($1, 1, $2, $3, $4, $5, $6, $7)`,
+      [email, elapsedTime, answers[0], answers[1], answers[2], answers[3], answers[4]], 
+      (err, result) => {
+        if (err) {
+          return res.status(500).send(err);
+        }
+        res.sendStatus(200);
+      }
+    );
+  
+  });
