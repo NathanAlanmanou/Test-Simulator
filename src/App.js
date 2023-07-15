@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { GoogleLogin } from 'react-google-login';
-
 
 const TestPage = ({ questions, timer, onAnswerChange, onSubmit }) => {
   return (
@@ -22,29 +20,12 @@ const TestPage = ({ questions, timer, onAnswerChange, onSubmit }) => {
 };
 
 const App = () => {
-  const [page, setPage] = useState('login');
-  const [timer, setTimer] = useState(7200); // 2 hours in seconds
+
+  const [page, setPage] = useState('start'); 
+  const [timer, setTimer] = useState(7200);
   const [answers, setAnswers] = useState([]);
-  const [email, setEmail] = useState('');
 
-  const validEmails = ['mkjeung@uchicago.edu', 'matthewkimjeung@gmail.com']; // List of valid emails
-
-  const handleLoginSuccess = (response) => {
-    const { email } = response.profileObj;
-    alert(email);
-    if (validEmails.includes(email)) {
-      setEmail(email);
-      setPage('start');
-    } else {
-      setPage('login');
-    }
-  };
-
-  const handleLoginFailure = (error) => {
-    console.log('Login failed:', error);
-    //temporary, should be login
-    setPage('start');
-  };
+  // Removed Google login logic
 
   useEffect(() => {
     let countdown;
@@ -58,11 +39,10 @@ const App = () => {
     return () => clearTimeout(countdown);
   }, [page, timer]);
 
-
   const startTest = () => {
     setPage('test');
   };
-
+  
   const handleAnswerChange = (index, event) => {
     const newAnswers = [...answers];
     newAnswers[index] = event.target.value;
@@ -77,26 +57,14 @@ const App = () => {
 
   const renderPage = () => {
     switch (page) {
-    case 'login':
-      return (
-        <div>
-          <h1>Google Login</h1>
-          <GoogleLogin
-            clientId="224009911894-dhi3o5gcjttqoq76c0jo5amf2nhtp34h.apps.googleusercontent.com"
-            buttonText="Login with Google"
-            onSuccess={handleLoginSuccess}
-            onFailure={handleLoginFailure}
-            cookiePolicy="single_host_origin"
-          />
-        </div>
-      );
       case 'start':
         return (
           <div>
             <h1>Welcome to the Test</h1>
-            <button onClick={startTest}>Start</button>
+            <button onClick={startTest}>Start</button> 
           </div>
         );
+
       case 'test':
         return (
           <TestPage
@@ -126,6 +94,7 @@ const App = () => {
   };
 
   return <div>{renderPage()}</div>;
+
 };
 
 export default App;
