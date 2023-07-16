@@ -17,7 +17,7 @@ const pool = new pg.Pool(pgConfig);
 
 // API route to save answers
 
-app.post('/api/answers', (req, res) => {
+app.post('http://localhost:5000/api/submit-test', (req, res) => {
   
     const { email, answers, elapsedTime } = req.body;
     
