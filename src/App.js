@@ -41,7 +41,7 @@ const App = () => {
 
     const elapsedTime = 7200 - timer; // get time remaining
     //console.log(elapsedTime);
-    setPage('thankyou');
+    //setPage('thankyou');
     fetch('/api/answers', {
       method: 'POST', 
       headers: {
@@ -61,6 +61,7 @@ const App = () => {
     }) 
     .catch(error => {
       console.log(error);
+      setPage('thankyou');
     });
   
   };
