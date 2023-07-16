@@ -55,7 +55,6 @@ const App = () => {
     })
     .then(response => {
       if (response.ok) {
-        console.log('Answers saved!'); 
         setPage('thankyou');
       }
     }) 
