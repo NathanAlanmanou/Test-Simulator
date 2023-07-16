@@ -49,35 +49,30 @@ const App = () => {
     setAnswers(newAnswers);
   };
 
-  const submitTest = async () => {
+  const submitTest = () => {
 
-    // Construct data to submit
-    const testData = {
-      email: 'test@example.com',
-      answers: answers,
-      elapsedTime: 7200 - timer 
-    };
-  
-    try {
-  
-      // Make API call to submit test data 
-      const response = await fetch('/api/submit-test', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json'},  
-        body: JSON.stringify(testData)
-      });
-  
-      // Throw error if API call fails
-      if(!response.ok) {
-        throw new Error('Failed to submit test'); 
+    const elapsedTime = 7200 - timer; // get time remaining
+    setPage('thankyou');
+    fetch('/api/answers', {
+      method: 'POST', 
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email: 'test@example.com',
+        answers: answers,
+        elapsedTime: elapsedTime
+      })
+    })
+    .then(response => {
+      if (response.ok) {
+        console.log('Answers saved!'); 
+        setPage('thankyou');
       }
-  
-      // Update state to show thank you page
-      setPage('thankyou');
-  
-    } catch(error) {
-      console.log(error); 
-    }
+    }) 
+    .catch(error => {
+      console.log(error);
+    });
   
   };
 
