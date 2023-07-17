@@ -40,8 +40,6 @@ const App = () => {
   const submitTest = () => {
 
     const elapsedTime = 7200 - timer; // get time remaining
-    //console.log(elapsedTime);
-    //setPage('thankyou');
     fetch('http://localhost:5000/api/submit-test', {
       method: 'POST', 
       headers: {
