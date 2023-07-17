@@ -19,9 +19,14 @@ const TestPage = ({ questions, timer, onAnswerChange, onSubmit }) => {
   );
 };
 
+// const generateRandomId = () => {
+//   return Math.floor(100000 + Math.random() * 900000);
+// };
+
 const App = () => {
 
   const [page, setPage] = useState('start'); 
+  // const [entryID, setEntryID] = useState(generateRandomId());
   const [timer, setTimer] = useState(7200);
   const [answers, setAnswers] = useState([]);
 

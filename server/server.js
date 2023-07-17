@@ -23,7 +23,7 @@ app.post('http://localhost:5000/api/submit-test', (req, res) => {
     
     pool.query(
       `INSERT INTO Test_Entries (Student_Email, Test_ID, Time_Elapsed, Answer_1, Answer_2, Answer_3, Answer_4, Answer_5) 
-       VALUES ($1, 1, $2, $3, $4, $5, $6, $7)`,
+       VALUES (12345, $1, 1, $2, $3, $4, $5, $6, $7)`,
       [email, elapsedTime, answers[0], answers[1], answers[2], answers[3], answers[4]], 
       (err, result) => {
         if (err) {
