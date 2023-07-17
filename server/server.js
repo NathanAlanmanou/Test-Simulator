@@ -41,8 +41,7 @@ app.post('http://localhost:5000/api/submit-test', (req, res) => {
     
     pool.query(
       `INSERT INTO public."Test Entries"("Entry ID", "Student Email", "Test ID", "Time Elapsed", "Answer 1", "Answer 2", "Answer 3", "Answer 4", "Answer 5") 
-       VALUES (12345, $1, 1, $2, 1, 2, 3, 4, 5)`,
-      [email, elapsedTime], 
+       VALUES (12345, "asdfas", 1, 1234, 1, 2, 3, 4, 5)`,
       (err, result) => {
         if (err) {
           return res.status(500).send(err);
