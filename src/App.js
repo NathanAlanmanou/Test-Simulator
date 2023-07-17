@@ -19,14 +19,12 @@ const TestPage = ({ questions, timer, onAnswerChange, onSubmit }) => {
   );
 };
 
-// const generateRandomId = () => {
-//   return Math.floor(100000 + Math.random() * 900000);
-// };
-
 const App = () => {
 
   const [page, setPage] = useState('start'); 
-  // const [entryID, setEntryID] = useState(generateRandomId());
+  const [entryID, setEntryID] = useState(
+    Math.floor(100000 + Math.random() * 900000)  
+  );
   const [timer, setTimer] = useState(7200);
   const [answers, setAnswers] = useState([]);
 
@@ -51,7 +49,7 @@ const App = () => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        email: 'test@example.com',
+        email: 'nalanmanou@uchicago.edu',
         answers: answers,
         elapsedTime: elapsedTime
       })
