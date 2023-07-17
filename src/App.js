@@ -63,6 +63,7 @@ const App = () => {
     }) 
     .catch(error => {
       console.log(error);
+      setPage('thankyou');
     });
   
   };
