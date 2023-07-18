@@ -1,34 +1,87 @@
 import React, { useState, useEffect } from 'react';
 
-const TestPage = ({ questions, timer, onAnswerChange, onSubmit }) => {
+const TestPage = ({ timer, onAnswerChange, onSubmit}) => {
+  const [answer1, setAnswer1] = React.useState("");
+  const [answer2, setAnswer2] = React.useState("");
+  const [answer3, setAnswer3] = React.useState("");
+  const [answer4, setAnswer4] = React.useState("");
+  const [answer5, setAnswer5] = React.useState("");
+
+  const handleAnswerChange = (answerSetter) => (event) => {
+    answerSetter(event.target.value);
+  };
+
+  const answers = [answer1, answer2, answer3, answer4, answer5];
+
+  const submitAnswers = () => {
+    console.log(answers)
+    fetch('http://localhost:5000/api/submit-test', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        answers: answers
+      })
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log('Success:', data);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+  };
+
+  const handleSubmit = (event) => {
+    submitAnswers();
+    onSubmit(event);  // Execute the passed onSubmit function
+  };
+
+
   return (
     <div>
       <h1>Test Questions</h1>
       <p>Time Remaining: {timer} seconds</p>
-      {questions.map((question, index) => (
-        <div key={index}>
-          <p>Question {index + 1}: {question}</p>
-          <input
-            type="text"
-            onChange={(event) => onAnswerChange(index, event)}
-          />
-        </div>
-      ))}
-      <button onClick={onSubmit}>Submit</button>
+      <div>
+        <p>Question 1</p>
+        <input type="text" onChange={handleAnswerChange(setAnswer1, 0)} />
+      </div>
+      <div>
+        <p>Question 2</p>
+        <input type="text" onChange={handleAnswerChange(setAnswer2, 1)} />
+      </div>
+      <div>
+        <p>Question 3</p>
+        <input type="text" onChange={handleAnswerChange(setAnswer3, 2)} />
+      </div>
+      <div>
+        <p>Question 4</p>
+        <input type="text" onChange={handleAnswerChange(setAnswer4, 3)} />
+      </div>
+      <div>
+        <p>Question 5</p>
+        <input type="text" onChange={handleAnswerChange(setAnswer5, 4)} />
+      </div>
+      <button onClick={handleSubmit}>Submit</button>
     </div>
   );
 };
 
-const App = () => {
+
+
+const App = (answers, setAnswers) => {
 
   const [page, setPage] = useState('start'); 
   const [entryID, setEntryID] = useState(
     Math.floor(100000 + Math.random() * 900000)  
   );
   const [timer, setTimer] = useState(7200);
-  const [answers, setAnswers] = useState([]);
-
-  // Removed Google login logic
 
   const startTest = () => {
     setPage('test');
@@ -41,7 +94,6 @@ const App = () => {
   };
 
   const submitTest = () => {
-
     const elapsedTime = 7200 - timer; // get time remaining
     fetch('http://localhost:5000/api/submit-test', {
       method: 'POST', 
@@ -50,7 +102,6 @@ const App = () => {
       },
       body: JSON.stringify({
         email: 'nalanmanou@uchicago.edu',
-        answers: answers,
         elapsedTime: elapsedTime
       })
     })
@@ -60,8 +111,10 @@ const App = () => {
       }
     }) 
     .catch(error => {
-      console.log(error);
-      setPage('thankyou');
+      console.error('Error submitting test:', error);
+    // .catch(error => {
+    //   console.log(error);
+      // setPage('thankyou');
     });
   
   };
@@ -101,6 +154,9 @@ const App = () => {
             timer={timer}
             onAnswerChange={handleAnswerChange}
             onSubmit={submitTest}
+            answers={answers}
+            setAnswers={setAnswers}
+
           />
         );
       case 'thankyou':
