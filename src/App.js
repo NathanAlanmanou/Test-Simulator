@@ -1,26 +1,36 @@
 import React, { useState, useEffect } from 'react';
 
-const TestPage = ({ timer, onAnswerChange, onSubmit}) => {
+const TestPage = ({page, timer, setPage}) => {
+  const [entryID, setEntryID] = useState(
+    Math.floor(100000 + Math.random() * 900000)  
+  );
+  const email = 'nalanmanou@uchicago.edu'
+  const testID = 1 
   const [answer1, setAnswer1] = React.useState("");
   const [answer2, setAnswer2] = React.useState("");
   const [answer3, setAnswer3] = React.useState("");
   const [answer4, setAnswer4] = React.useState("");
   const [answer5, setAnswer5] = React.useState("");
+  const answers = [answer1, answer2, answer3, answer4, answer5];
 
   const handleAnswerChange = (answerSetter) => (event) => {
     answerSetter(event.target.value);
   };
 
-  const answers = [answer1, answer2, answer3, answer4, answer5];
+  if (page === 'test' && timer === 0) {submitAnswers()}
 
   const submitAnswers = () => {
-    console.log(answers)
+    const elapsedTime = 7200 - timer; // get time remaining
     fetch('http://localhost:5000/api/submit-test', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
+        entryID: entryID,
+        email: email,
+        testID: testID,
+        elapsedTime: elapsedTime,
         answers: answers
       })
     })
@@ -31,7 +41,7 @@ const TestPage = ({ timer, onAnswerChange, onSubmit}) => {
       return response.json();
     })
     .then(data => {
-      console.log('Success:', data);
+    setPage('thankyou')
     })
     .catch((error) => {
       console.error('Error:', error);
@@ -40,9 +50,7 @@ const TestPage = ({ timer, onAnswerChange, onSubmit}) => {
 
   const handleSubmit = (event) => {
     submitAnswers();
-    onSubmit(event);  // Execute the passed onSubmit function
   };
-
 
   return (
     <div>
@@ -74,49 +82,13 @@ const TestPage = ({ timer, onAnswerChange, onSubmit}) => {
 };
 
 
-
-const App = (answers, setAnswers) => {
-
-  const [page, setPage] = useState('start'); 
-  const [entryID, setEntryID] = useState(
-    Math.floor(100000 + Math.random() * 900000)  
-  );
+const App = () => {
+  const [page, setPage] = useState('start');
   const [timer, setTimer] = useState(7200);
+
 
   const startTest = () => {
     setPage('test');
-  };
-  
-  const handleAnswerChange = (index, event) => {
-    const newAnswers = [...answers];
-    newAnswers[index] = event.target.value;
-    setAnswers(newAnswers);
-  };
-
-  const submitTest = () => {
-    const elapsedTime = 7200 - timer; // get time remaining
-    fetch('http://localhost:5000/api/submit-test', {
-      method: 'POST', 
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        email: 'nalanmanou@uchicago.edu',
-        elapsedTime: elapsedTime
-      })
-    })
-    .then(response => {
-      if (response.ok) {
-        setPage('thankyou');
-      }
-    }) 
-    .catch(error => {
-      console.error('Error submitting test:', error);
-    // .catch(error => {
-    //   console.log(error);
-      // setPage('thankyou');
-    });
-  
   };
 
   useEffect(() => {
@@ -125,9 +97,10 @@ const App = (answers, setAnswers) => {
       countdown = setTimeout(() => {
         setTimer((prevTimer) => prevTimer - 1);
       }, 1000);
-    } else if (page === 'test' && timer === 0) {
-      submitTest(); // Automatically submit the test when the timer runs out
-    }
+    } 
+    // else if (page === 'test' && timer === 0) {
+    //   submitAnswers(); // Automatically submit the test when the timer runs out
+    // }
     return () => clearTimeout(countdown);
   }, [page, timer]);
 
@@ -152,11 +125,7 @@ const App = (answers, setAnswers) => {
               "Question 5"
             ]}
             timer={timer}
-            onAnswerChange={handleAnswerChange}
-            onSubmit={submitTest}
-            answers={answers}
-            setAnswers={setAnswers}
-
+            setPage={setPage}
           />
         );
       case 'thankyou':
@@ -171,9 +140,7 @@ const App = (answers, setAnswers) => {
         return null;
     }
   };
-
   return <div>{renderPage()}</div>;
-
 };
 
 export default App;
