@@ -60,23 +60,23 @@ const TestPage = ({page, timer, setPage}) => {
   <p style={{fontSize: '1.1em'}}>Write your answers to each question in the space below. Press the 'Submit' button when you are finished.</p>
   <p>Time Remaining: {timer} seconds</p>
   <div>
-    <p>Question 1</p>
+    <p>Describe a challenge that you have overcome in your life.</p>
     <input type="text" onChange={handleAnswerChange(setAnswer1, 0)} />
   </div>
   <div>
-    <p>Question 2</p>
+    <p>Everyone applying to TJ says they are a good fit. What made you decide to apply?</p>
     <input type="text" onChange={handleAnswerChange(setAnswer2, 1)} />
   </div>
   <div>
-    <p>Question 3</p>
+    <p>What’s the biggest risk you’ve ever taken? How did it turn out?</p>
     <input type="text" onChange={handleAnswerChange(setAnswer3, 2)} />
   </div>
   <div>
-    <p>Question 4</p>
+    <p>What is something you do every day? When did you start doing this? What does it mean to you?</p>
     <input type="text" onChange={handleAnswerChange(setAnswer4, 3)} />
   </div>
   <div>
-    <p>Question 5</p>
+    <p>What makes you happy?</p>
     <input type="text" onChange={handleAnswerChange(setAnswer5, 4)} />
   </div>
   <button onClick={handleSubmit}>Submit</button>
@@ -132,11 +132,11 @@ const App = () => {
         return (
           <TestPage
             questions={[
-              "Question 1",
-              "Question 2",
-              "Question 3",
-              "Question 4",
-              "Question 5"
+              "Describe a challenge that you have overcome in your life.",
+              "Everyone applying to TJ says they are a good fit. What made you decide to apply?",
+              "What’s the biggest risk you’ve ever taken? How did it turn out?",
+              "What is something you do every day? When did you start doing this? What does it mean to you?",
+              "What makes you happy?"
             ]}
             timer={timer}
             setPage={setPage}
@@ -144,7 +144,7 @@ const App = () => {
         );
       case 'thankyou':
         return (
-          <div>
+          <div style={{textAlign: 'center'}}>
             <h1>Thank You for Submitting the Test!</h1>
             <p>Time Remaining: {timer} seconds</p>
             {/* Display any additional information or messages here */}
