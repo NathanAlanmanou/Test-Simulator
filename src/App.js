@@ -98,7 +98,7 @@ const App = () => {
         setTimer((prevTimer) => prevTimer - 1);
       }, 1000);
     } 
-    // else if (page === 'test' && timer === 0) {
+    // else if (page === 'test' && timer === 0) { 
     //   submitAnswers(); // Automatically submit the test when the timer runs out
     // }
     return () => clearTimeout(countdown);
