@@ -2,6 +2,33 @@
   text-align: center;
 }
 
+.title {
+  text-align: center;
+  font-size: 1em;
+}
+
+.title1 {
+  text-align: center;
+  font-size: 1.5em
+  /* add other properties as needed */
+}
+
+.text {
+  text-align: center;
+  /* add other properties as needed */
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+}
+
+.App .btn {
+  font-size: 3em; /* This will make the button text 1.5 times larger */
+  padding: 20px 40px; /* This will increase the size of the button */
+}
+
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;

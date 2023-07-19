@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import './App.css';
+
 
 const TestPage = ({page, timer, setPage}) => {
   const [entryID, setEntryID] = useState(
@@ -53,31 +55,32 @@ const TestPage = ({page, timer, setPage}) => {
   };
 
   return (
-    <div>
-      <h1>Test Questions</h1>
-      <p>Time Remaining: {timer} seconds</p>
-      <div>
-        <p>Question 1</p>
-        <input type="text" onChange={handleAnswerChange(setAnswer1, 0)} />
-      </div>
-      <div>
-        <p>Question 2</p>
-        <input type="text" onChange={handleAnswerChange(setAnswer2, 1)} />
-      </div>
-      <div>
-        <p>Question 3</p>
-        <input type="text" onChange={handleAnswerChange(setAnswer3, 2)} />
-      </div>
-      <div>
-        <p>Question 4</p>
-        <input type="text" onChange={handleAnswerChange(setAnswer4, 3)} />
-      </div>
-      <div>
-        <p>Question 5</p>
-        <input type="text" onChange={handleAnswerChange(setAnswer5, 4)} />
-      </div>
-      <button onClick={handleSubmit}>Submit</button>
-    </div>
+<div style={{textAlign: 'center'}}>
+  <h1>Test Questions</h1>
+  <p style={{fontSize: '1.1em'}}>Write your answers to each question in the space below. Press the 'Submit' button when you are finished.</p>
+  <p>Time Remaining: {timer} seconds</p>
+  <div>
+    <p>Question 1</p>
+    <input type="text" onChange={handleAnswerChange(setAnswer1, 0)} />
+  </div>
+  <div>
+    <p>Question 2</p>
+    <input type="text" onChange={handleAnswerChange(setAnswer2, 1)} />
+  </div>
+  <div>
+    <p>Question 3</p>
+    <input type="text" onChange={handleAnswerChange(setAnswer3, 2)} />
+  </div>
+  <div>
+    <p>Question 4</p>
+    <input type="text" onChange={handleAnswerChange(setAnswer4, 3)} />
+  </div>
+  <div>
+    <p>Question 5</p>
+    <input type="text" onChange={handleAnswerChange(setAnswer5, 4)} />
+  </div>
+  <button onClick={handleSubmit}>Submit</button>
+</div>
   );
 };
 
@@ -108,12 +111,23 @@ const App = () => {
     switch (page) {
       case 'start':
         return (
-          <div>
-            <h1>Welcome to the Test</h1>
-            <button onClick={startTest}>Start</button> 
-          </div>
+          <body>
+            <div className="header">
+        <div className="logo" style={{padding: '35px'}}>
+            <img src="https://static.wixstatic.com/media/4606ee_fd197c744f29469ca269ab7c908a07e1~mv2.png/v1/fill/w_92,h_92,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/EA_Round2%20(2).png" alt="banner"></img>
+        </div>
+              <div className="title"><h1>TJTestPrep Student Practice Portal</h1></div>
+            </div>
+            <div className="container">
+              <h1 className="title1">TJTestPrep Practice Exam</h1>
+              <h2 className="title1"></h2>
+              <p className="text">Select the start button when you are ready to begin the exam</p>
+              <div className="button-container">
+                <button className="btn" onClick={startTest}>Start</button>
+              </div>
+            </div>
+          </body>
         );
-
       case 'test':
         return (
           <TestPage
