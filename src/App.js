@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Component } from 'react';
+import { GoogleLogin } from 'react-google-login';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { gapi } from "gapi-script";
 import './App.css';
 
 
-const TestPage = ({page, timer, setPage}) => {
+const TestPage = ({email, onAnswerChange, page, timer, setPage}) => {
   const [entryID, setEntryID] = useState(
-    Math.floor(100000 + Math.random() * 900000)  
+    Math.floor(100000 + Math.random() * 999999)  
   );
-  const email = 'nalanmanou@uchicago.edu'
   const testID = 1 
   const [answer1, setAnswer1] = React.useState("");
   const [answer2, setAnswer2] = React.useState("");
@@ -18,11 +21,20 @@ const TestPage = ({page, timer, setPage}) => {
   const handleAnswerChange = (answerSetter) => (event) => {
     answerSetter(event.target.value);
   };
+  
+  //Establish Questions, (later will be achieved by importing from public."Questions")
+  const questions=[
+    "Describe a challenge that you have overcome in your life.",
+    "Everyone applying to TJ says they are a good fit. What made you decide to apply?",
+    "What’s the biggest risk you’ve ever taken? How did it turn out?",
+    "What is something you do every day? When did you start doing this? What does it mean to you?",
+    "What makes you happy?"
+  ]
 
   if (page === 'test' && timer === 0) {submitAnswers()}
 
   const submitAnswers = () => {
-    const elapsedTime = 7200 - timer; // get time remaining
+    const elapsedTime = 90 - timer; // get time remaining
     fetch('http://localhost:5000/api/submit-test', {
       method: 'POST',
       headers: {
@@ -54,40 +66,83 @@ const TestPage = ({page, timer, setPage}) => {
     submitAnswers();
   };
 
+  const characterLimits = [1500, 1500, 1500, 3700]; // Character Limits
+
   return (
-<div style={{textAlign: 'center'}}>
-  <h1>Test Questions</h1>
-  <p style={{fontSize: '1.1em'}}>Write your answers to each question in the space below. Press the 'Submit' button when you are finished.</p>
-  <p>Time Remaining: {timer} seconds</p>
-  <div>
-    <p>Describe a challenge that you have overcome in your life.</p>
-    <input type="text" onChange={handleAnswerChange(setAnswer1, 0)} />
-  </div>
-  <div>
-    <p>Everyone applying to TJ says they are a good fit. What made you decide to apply?</p>
-    <input type="text" onChange={handleAnswerChange(setAnswer2, 1)} />
-  </div>
-  <div>
-    <p>What’s the biggest risk you’ve ever taken? How did it turn out?</p>
-    <input type="text" onChange={handleAnswerChange(setAnswer3, 2)} />
-  </div>
-  <div>
-    <p>What is something you do every day? When did you start doing this? What does it mean to you?</p>
-    <input type="text" onChange={handleAnswerChange(setAnswer4, 3)} />
-  </div>
-  <div>
-    <p>What makes you happy?</p>
-    <input type="text" onChange={handleAnswerChange(setAnswer5, 4)} />
-  </div>
-  <button onClick={handleSubmit}>Submit</button>
-</div>
+    <div style={{textAlign: 'center'}}>
+      <div className="header">
+        <div className="logo">
+          <img src="https://jasonline.fcps.edu/jase-web/resource/images/tjhs_banner.png" alt="banner" />
+        </div>
+        <div className="title">
+          <h2>Student Information Sheet</h2>
+        </div>
+      </div>
+      <div className="container">
+        <h1 className="title1">Thomas Jefferson High School for Science and Technology</h1>
+        <h2 className="title1">TJTestPrep Practice Essay Portal</h2>
+        <p className="text">Please answer the question(s) below. Once you complete the sheet, scroll down to the bottom and submit.</p>
+        {/* Could probably add some information about the user here */} (RoP)
+        <p className="red">MINUTES REMAINING: {timer}</p>
+        <h3><b>Student Information Sheet:</b></h3>
+          <div>
+          <p>Describe a challenge that you have overcome in your life.</p>
+          <input type="text" onChange={(event) => handleAnswerChange(setAnswer1, 0, event)} />
+        </div>
+        <div>
+          <p>Everyone applying to TJ says they are a good fit. What made you decide to apply?</p>
+          <input type="text" onChange={(event) => handleAnswerChange(setAnswer2, 1, event)} />
+        </div>
+        <div>
+          <p>What’s the biggest risk you’ve ever taken? How did it turn out?</p>
+          <input type="text" onChange={(event) => handleAnswerChange(setAnswer3, 2, event)} />
+        </div>
+        <div>
+          <p>What is something you do every day? When did you start doing this? What does it mean to you?</p>
+          <input type="text" onChange={(event) => handleAnswerChange(setAnswer4, 3, event)} />
+        </div>
+        <div>
+          <p>What makes you happy?</p>
+          <input type="text" onChange={(event) => handleAnswerChange(setAnswer5, 4, event)} />
+        </div>
+        <button onClick={handleSubmit}>Submit Answers</button>
+      </div>
+    </div>
   );
-};
+  };
 
 
 const App = () => {
-  const [page, setPage] = useState('start');
-  const [timer, setTimer] = useState(7200);
+  const [page, setPage] = useState('login');
+  const [timer, setTimer] = useState(90); // 90 minutes
+  const [email, setEmail] = useState('');
+
+
+  gapi.load("client:auth2", () => {
+    gapi.client.init({
+      clientId: "523668124113-jh0ttje6rh13ss9onubqsj9v2raum1it.apps.googleusercontent.com",
+      plugin_name: "tjsim"
+    });
+  });
+
+  const validEmails = ['mkjeung@uchicago.edu', 'nalanmanou@uchicago.edu', 'matthewkimjeung@gmail.com', 'shrys.jain@gmail.com']; // List of valid emails
+
+  const handleLoginSuccess = (response) => {
+    console.log("RESPONSE:"  + response);
+    const { email } = response.profileObj;
+    alert("Welcome " + email);
+    if (validEmails.includes(email)) {
+      setEmail(email);
+      setPage('start');
+    } else {
+      setPage('login');
+    }
+  };
+
+  const handleLoginFailure = (error) => {
+    console.log(error);
+    setPage('login');
+  };
 
 
   const startTest = () => {
@@ -99,45 +154,54 @@ const App = () => {
     if (page === 'test' && timer > 0) {
       countdown = setTimeout(() => {
         setTimer((prevTimer) => prevTimer - 1);
-      }, 1000);
+      }, 60000);
     } 
-    // else if (page === 'test' && timer === 0) { 
-    //   submitAnswers(); // Automatically submit the test when the timer runs out
-    // }
     return () => clearTimeout(countdown);
   }, [page, timer]);
 
   const renderPage = () => {
     switch (page) {
-      case 'start':
+      case 'login':
         return (
-          <body>
-            <div className="header">
-        <div className="logo" style={{padding: '35px'}}>
-            <img src="https://static.wixstatic.com/media/4606ee_fd197c744f29469ca269ab7c908a07e1~mv2.png/v1/fill/w_92,h_92,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/EA_Round2%20(2).png" alt="banner"></img>
-        </div>
-              <div className="title"><h1>TJTestPrep Student Practice Portal</h1></div>
-            </div>
-            <div className="container">
-              <h1 className="title1">TJTestPrep Practice Exam</h1>
-              <h2 className="title1"></h2>
-              <p className="text">Select the start button when you are ready to begin the exam</p>
-              <div className="button-container">
-                <button className="btn" onClick={startTest}>Start</button>
-              </div>
-            </div>
-          </body>
+          <div>
+            <h1 class="whitetext">Google Login</h1>
+            <GoogleLogin
+              clientId="523668124113-jh0ttje6rh13ss9onubqsj9v2raum1it.apps.googleusercontent.com"
+              pluginName="TJ Simulator"
+              buttonText="Login with Google"
+              onSuccess={handleLoginSuccess}
+              onFailure={handleLoginFailure}
+              cookiePolicy={"single_host_origin"}
+            />
+          </div>
         );
-      case 'test':
-        return (
-          <TestPage
-            questions={[
-              "Describe a challenge that you have overcome in your life.",
-              "Everyone applying to TJ says they are a good fit. What made you decide to apply?",
-              "What’s the biggest risk you’ve ever taken? How did it turn out?",
-              "What is something you do every day? When did you start doing this? What does it mean to you?",
-              "What makes you happy?"
-            ]}
+        case 'start':
+          return (
+            <body>
+              <div class="header">
+                <div class="logo"><img src="https://jasonline.fcps.edu/jase-web/resource/images/tjhs_banner.png" alt="banner"></img></div>
+                <div class="title"><h2>TJTestPrep Portal</h2></div>
+              </div>
+              <div class="container">
+                <h1 class="title1">Thomas Jefferson High School for Science and Technology</h1>
+                <h2 class="title1">TJTestPrep Student Practice Portal</h2>
+                <p class="text">Please wait until further instructions are given by your session proctor</p>
+                <p class="text">When instructed, select the Start button below.</p>
+                <button class="btn" onClick={startTest}>Start</button>
+              </div>
+            </body>
+          );
+        case 'test':
+          return (
+            <TestPage
+              questions={[
+                "Prompt 1",
+                "Prompt 2",
+                "Prompt 3",
+                "Prompt 4",
+                "Prompt 5"
+              ]}
+            email={email}
             timer={timer}
             setPage={setPage}
           />
