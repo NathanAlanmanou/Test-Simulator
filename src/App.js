@@ -6,20 +6,24 @@ import { gapi } from "gapi-script";
 import './App.css';
 
 
-const TestPage = ({email, onAnswerChange, page, timer, setPage}) => {
+const TestPage = ({email, page, timer, setPage}) => {
   const [entryID, setEntryID] = useState(
     Math.floor(100000 + Math.random() * 999999)  
   );
   const testID = 1 
-  const [answer1, setAnswer1] = React.useState("");
-  const [answer2, setAnswer2] = React.useState("");
-  const [answer3, setAnswer3] = React.useState("");
-  const [answer4, setAnswer4] = React.useState("");
-  const [answer5, setAnswer5] = React.useState("");
-  const answers = [answer1, answer2, answer3, answer4, answer5];
+  // const [answer1, setAnswer1] = React.useState("");
+  // const [answer2, setAnswer2] = React.useState("");
+  // const [answer3, setAnswer3] = React.useState("");
+  // const [answer4, setAnswer4] = React.useState("");
+  // const [answer5, setAnswer5] = React.useState("");
+  // const answers = [answer1, answer2, answer3, answer4, answer5];
+  const [answers, setAnswers] = useState(Array(5).fill(''));
 
-  const handleAnswerChange = (answerSetter) => (event) => {
-    answerSetter(event.target.value);
+
+  const handleAnswerChange = (index, event) => {
+    const newAnswers = [...answers];
+    newAnswers[index] = event.target.value;
+    setAnswers(newAnswers);
   };
   
   //Establish Questions, (later will be achieved by importing from public."Questions")
@@ -87,23 +91,23 @@ const TestPage = ({email, onAnswerChange, page, timer, setPage}) => {
         <h3><b>Student Information Sheet:</b></h3>
           <div>
           <p>Describe a challenge that you have overcome in your life.</p>
-          <input type="text" onChange={(event) => handleAnswerChange(setAnswer1, 0, event)} />
+          <input type="text" onChange={(event) => handleAnswerChange(0, event)} />
         </div>
         <div>
           <p>Everyone applying to TJ says they are a good fit. What made you decide to apply?</p>
-          <input type="text" onChange={(event) => handleAnswerChange(setAnswer2, 1, event)} />
+          <input type="text" onChange={(event) => handleAnswerChange(1, event)} />
         </div>
         <div>
           <p>What’s the biggest risk you’ve ever taken? How did it turn out?</p>
-          <input type="text" onChange={(event) => handleAnswerChange(setAnswer3, 2, event)} />
+          <input type="text" onChange={(event) => handleAnswerChange(2, event)} />
         </div>
         <div>
           <p>What is something you do every day? When did you start doing this? What does it mean to you?</p>
-          <input type="text" onChange={(event) => handleAnswerChange(setAnswer4, 3, event)} />
+          <input type="text" onChange={(event) => handleAnswerChange(3, event)} />
         </div>
         <div>
           <p>What makes you happy?</p>
-          <input type="text" onChange={(event) => handleAnswerChange(setAnswer5, 4, event)} />
+          <input type="text" onChange={(event) => handleAnswerChange(4, event)} />
         </div>
         <button onClick={handleSubmit}>Submit Answers</button>
       </div>
