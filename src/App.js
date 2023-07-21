@@ -104,125 +104,48 @@ const TestPage = ({email, page, timer, setPage}) => {
   // centered, even if you do style={{textAlign: "center"}}
 
   return (
-    <div style={{textAlign: 'center'}}>
-      <div className="header">
-        <div className="logo">
-          <img src="https://jasonline.fcps.edu/jase-web/resource/images/tjhs_banner.png" alt="banner" />
-        </div>
-        <div className="title">
-          <h2>Student Information Sheet</h2>
-        </div>
+    <div>
+      <div class="header">
+        <div class="logo"><img src="https://jasonline.fcps.edu/jase-web/resource/images/tjhs_banner.png" alt="banner"></img></div>
       </div>
       <div className="container">
-        <h1 className="title1">Thomas Jefferson High School for Science and Technology</h1>
-        <h2 className="title1">TJTestPrep Practice Essay Portal</h2>
-        <p className="text" style={{textAlign: "center"}}>Please answer the question(s) below. Once you complete the sheet, scroll down to the bottom and submit.</p>
-        {/* Could probably add some information about the user here */} (RoP)
-        <p className="red">MINUTES REMAINING: {timer}</p>
-        <h3><b>Student Information Sheet:</b></h3>
-        <div>
-          <p>Describe a challenge that you have overcome in your life.</p>
-          <CKEditor
-            editor={ClassicEditor}
-            data={answers[0] || ''}
-            config={{
-              toolbar: [
-                'undo', 'redo', '|',
-                'bold', 'italic', 'underline', '|',
-                'cut', 'copy', 'paste', '|',
-                'bulletedList', 'indent', 'outdent',
-              ],
-            }}
-            onChange={(event, editor) => {
-              const data = editor.getData();
-              handleAnswerChange(0, { target: { value: data } });
-            }}
-            disabled={remainingCharacters[0] <= 0}
-          />
-        </div>
-        <div>
-          <p>Everyone applying to TJ says they are a good fit. What made you decide to apply?</p>
-          <CKEditor
-            editor={ClassicEditor}
-            data={answers[1] || ''}
-            config={{
-              toolbar: [
-                'undo', 'redo', '|',
-                'bold', 'italic', 'underline', '|',
-                'cut', 'copy', 'paste', '|',
-                'bulletedList', 'indent', 'outdent',
-              ],
-            }}
-            onChange={(event, editor) => {
-              const data = editor.getData();
-              handleAnswerChange(1, { target: { value: data } });
-            }}
-            disabled={remainingCharacters[1] <= 0}
-          />
-        </div>
-        <div>
-          <p>What’s the biggest risk you’ve ever taken? How did it turn out?</p>
-          <CKEditor
-            editor={ClassicEditor}
-            data={answers[2] || ''}
-            config={{
-              toolbar: [
-                'undo', 'redo', '|',
-                'bold', 'italic', 'underline', '|',
-                'cut', 'copy', 'paste', '|',
-                'bulletedList', 'indent', 'outdent',
-              ],
-            }}
-            onChange={(event, editor) => {
-              const data = editor.getData();
-              handleAnswerChange(2, { target: { value: data } });
-            }}
-            disabled={remainingCharacters[2] <= 0}
-          />
-        </div>
-        <div>
-          <p>What is something you do every day? When did you start doing this? What does it mean to you?</p>
-          <CKEditor
-            editor={ClassicEditor}
-            data={answers[3] || ''}
-            config={{
-              toolbar: [
-                'undo', 'redo', '|',
-                'bold', 'italic', 'underline', '|',
-                'cut', 'copy', 'paste', '|',
-                'bulletedList', 'indent', 'outdent',
-              ],
-            }}
-            onChange={(event, editor) => {
-              const data = editor.getData();
-              handleAnswerChange(3, { target: { value: data } });
-            }}
-            disabled={remainingCharacters[3] <= 0}
-          />
-        </div>
-        <div>
-          <p>What makes you happy?</p>
-          <CKEditor
-            editor={ClassicEditor}
-            data={answers[4] || ''}
-            config={{
-              toolbar: [
-                'undo', 'redo', '|',
-                'bold', 'italic', 'underline', '|',
-                'cut', 'copy', 'paste', '|',
-                'bulletedList', 'indent', 'outdent',
-              ],
-            }}
-            onChange={(event, editor) => {
-              const data = editor.getData();
-              handleAnswerChange(4, { target: { value: data } });
-            }}
-            disabled={remainingCharacters[4] <= 0}
-          />
-        </div>
-
+        <h1 className="text" style={{textAlign: "center", color: "white"}}>.</h1>
+        <h1 className="title1" style={{textAlign: "center"}}>Thomas Jefferson High School for Science and Technology</h1>
+        <h2 className="title1" style={{textAlign: "center"}}>TJTestPrep Practice Essay Exam (Class of 2023-2024)</h2>
+        <p className="text" style={{fontSize: "small"}}>User: {email}</p>
+        <br></br>
         {renderFAQButton()}
-        <button onClick={handleSubmit}>Submit Answers</button>
+        <br></br>
+        <p className="text" style={{textAlign: "center"}}>Please answer the question(s) below. Once you complete the sheet, scroll down to the bottom and submit.</p>
+
+        <br></br>
+        <h3 class="text" style={{textAlign: "center"}}><b>Student Information Sheet:</b></h3>
+        {questions.map((question, index) => (
+          <div key={index}>
+            <p class="text" style={{textAlign: "center"}}>{question}</p>
+            <CKEditor
+              editor={ClassicEditor}
+              data={answers[index] || ''}
+              config={{
+                toolbar: [
+                  'undo', 'redo', '|',
+                  'bold', 'italic', 'underline', '|',
+                  'cut', 'copy', 'paste', '|',
+                  'bulletedList', 'indent', 'outdent',
+                ],
+              }}
+              onChange={(event, editor) => {
+                const data = editor.getData();
+                handleAnswerChange(index, { target: { value: data } });
+              }}
+              disabled={remainingCharacters[index] <= 0} // Disable the CKEditor when character limit is reached
+            />
+            <p class="smalltext" style={{fontSize: "small"}}>Remaining Characters: {remainingCharacters[index]}</p>
+          </div>
+        ))}
+        <div class="align-right">
+          <button onClick={handleSubmit}>Submit</button>
+        </div>
       </div>
     </div>
   );
@@ -281,17 +204,26 @@ const App = () => {
     switch (page) {
       case 'login':
         return (
-          <div>
-            <h1 class="whitetext">Google Login</h1>
-            <GoogleLogin
-              clientId="523668124113-jh0ttje6rh13ss9onubqsj9v2raum1it.apps.googleusercontent.com"
-              pluginName="TJ Simulator"
-              buttonText="Login with Google"
-              onSuccess={handleLoginSuccess}
-              onFailure={handleLoginFailure}
-              cookiePolicy={"single_host_origin"}
-            />
-          </div>
+          <body>
+            <div class="header">
+              <div class="logo"><img src="https://jasonline.fcps.edu/jase-web/resource/images/tjhs_banner.png" alt="banner"></img></div>
+              <div class="title"><h2>TJTestPrep Simulator</h2></div>
+            </div>
+            <div class="container">
+              <h1 className="text" style={{textAlign: "center", color: "white"}}>.</h1>
+              <h1 class="login" >Welcome to the TJTestPrep Simulator!</h1>
+              <h2 class="title1">Please login with Google to continue:</h2>
+              <br></br>
+              <GoogleLogin
+                clientId="523668124113-jh0ttje6rh13ss9onubqsj9v2raum1it.apps.googleusercontent.com"
+                pluginName="TJ Simulator"
+                buttonText="Login with Google"
+                onSuccess={handleLoginSuccess}
+                onFailure={handleLoginFailure}
+                cookiePolicy={"single_host_origin"}
+              />
+            </div>
+          </body>
         );
         case 'start':
           return (
@@ -301,6 +233,7 @@ const App = () => {
                 <div class="title"><h2>TJTestPrep Portal</h2></div>
               </div>
               <div class="container">
+                <h1 className="text" style={{textAlign: "center", color: "white"}}>.</h1>
                 <h1 className="title1">Thomas Jefferson High School for Science and Technology</h1>
                 <h2 class="title1" style={{textAlign: "center"}}>TJTestPrep Student Practice Portal</h2>
                 <p class="text" style={{textAlign: "center"}}>Please wait until further instructions are given by your session proctor</p>
@@ -326,13 +259,19 @@ const App = () => {
         );
       case 'thankyou':
         return (
-          <div style={{textAlign: 'center', color: 'white'}}>
-            <h1>Thank You for Submitting the Test!</h1>
-            <p>We will return your evaluated text shortly.</p>
-            <p>Time Remaining: {timer} minutes</p>
-            {/* Display any additional information or messages here */}
-          </div>
-
+          <body>
+            <div class="header">
+              <div class="logo"><img src="https://jasonline.fcps.edu/jase-web/resource/images/tjhs_banner.png" alt="banner"></img></div>
+              <div class="title"><h2>TJTestPrep Simulator</h2></div>
+            </div>
+            <div class="container">
+              <h1 className="text" style={{textAlign: "center", color: "white"}}>.</h1>
+              <h1 className="text" style={{textAlign: "center"}}>Thank You for Submitting!</h1>
+              <br></br>
+              <p className="text" style={{textAlign: "center"}}>We will return your evaluated text shortly.</p>
+              <p className="text" style={{textAlign: "center"}}>Time you had remaining: <b>{timer}</b> minutes</p>
+            </div>
+          </body>
         );
       default:
         return null;

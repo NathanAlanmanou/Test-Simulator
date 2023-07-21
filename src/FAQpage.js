@@ -6,7 +6,7 @@ const FAQPage = () => {
   const faqData = [
     {
       question: 'Can I skip questions and come back to them later?',
-      answer: 'You are allowed to o skip questions and return to them later within the same section. However, \
+      answer: 'You are allowed to skip questions and return to them later within the same section. However, \
       it is advisable that you try to answer every question to the best of your abilities.'
     },
     {
