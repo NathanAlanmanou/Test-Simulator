@@ -244,7 +244,7 @@ const App = () => {
         return (
           <div style={{textAlign: 'center'}}>
             <h1>Thank You for Submitting the Test!</h1>
-            <p>Time Remaining: {timer} seconds</p>
+            <p>Time Remaining: {timer} minutes</p>
             {/* Display any additional information or messages here */}
           </div>
         );
