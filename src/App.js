@@ -148,13 +148,14 @@ const TestPage = ({email, page, timer, setPage}) => {
 
 const App = () => {
   const [page, setPage] = useState('login');
-  const [timer, setTimer] = useState(90); // 90 minutes
+  const [timer, setTimer] = useState(90);
   const [email, setEmail] = useState('');
 
 
   gapi.load("client:auth2", () => {
     gapi.client.init({
       clientId: "523668124113-jh0ttje6rh13ss9onubqsj9v2raum1it.apps.googleusercontent.com",
+      scope: 'profile email',
       plugin_name: "tjsim"
     });
   });
@@ -242,11 +243,13 @@ const App = () => {
         );
       case 'thankyou':
         return (
-          <div style={{textAlign: 'center'}}>
+          <div style={{textAlign: 'center', color: 'white'}}>
             <h1>Thank You for Submitting the Test!</h1>
+            <p>We will return your evaluated text shortly.</p>
             <p>Time Remaining: {timer} minutes</p>
             {/* Display any additional information or messages here */}
           </div>
+
         );
       default:
         return null;
