@@ -106,20 +106,19 @@ const TestPage = ({email, page, timer, setPage}) => {
   return (
     <div>
       <div class="header">
-        <div class="logo"><img src="https://jasonline.fcps.edu/jase-web/resource/images/tjhs_banner.png" alt="banner"></img></div>
-        <div class="title"><h2>Student Information Sheet</h2></div>
+        <div class="logo"><img src="https://i.ibb.co/qWhBPVK/Edu-Avenues.png" alt="banner"></img></div>
+        <div class="title"><h2>TJTestPrep Practice Portal</h2></div>
       </div>
       <div className="container">
         <br></br>
         <h1 className="title1" style={{textAlign: "center"}}>Thomas Jefferson High School for Science and Technology</h1>
-        <h2 className="title1">TJTestPrep Practice Essay Exam (Class of 2028)</h2>
+        <h2 className="title1">TJTestPrep Practice Essay Exam</h2>
         <p className="text" style={{fontSize: "small"}}>User: {email}</p>
-        <br></br>
         {renderFAQButton()}
         <br></br>
         <p className="text">Please answer the question(s) below. Once you complete the sheet, scroll down to the bottom and submit.</p>
-        <br></br>
-        <h3 class="text"><b>Student Information Sheet:</b></h3>
+        <h4 className="red"><b>{timer} MINUTES REMAINING</b></h4>
+        <h3 class="text"><b>Student Portrait Sheet + Problem Solving Essay:</b></h3>
         {questions.map((question, index) => (
           <div key={index}>
             <p class="text">{question}</p>
@@ -209,7 +208,7 @@ const App = () => {
         return (
           <body>
             <div class="header">
-              <div class="logo"><img src="https://jasonline.fcps.edu/jase-web/resource/images/tjhs_banner.png" alt="banner"></img></div>
+              <div><img class="logo" src="https://i.ibb.co/qWhBPVK/Edu-Avenues.png" alt="banner"></img></div>
               <div class="title"><h2>TJTestPrep Simulator</h2></div>
             </div>
             <div class="container">
@@ -232,7 +231,7 @@ const App = () => {
           return (
             <body>
               <div class="header">
-                <div class="logo"><img src="https://jasonline.fcps.edu/jase-web/resource/images/tjhs_banner.png" alt="banner"></img></div>
+                <div class="logo"><img src="https://i.ibb.co/qWhBPVK/Edu-Avenues.png" alt="banner"></img></div>
                 <div class="title"><h2>TJTestPrep Portal</h2></div>
               </div>
               <div class="container">
@@ -264,7 +263,7 @@ const App = () => {
         return (
           <body>
             <div class="header">
-              <div class="logo"><img src="https://jasonline.fcps.edu/jase-web/resource/images/tjhs_banner.png" alt="banner"></img></div>
+              <div class="logo"><img src="https://i.ibb.co/qWhBPVK/Edu-Avenues.png" alt="banner"></img></div>
               <div class="title"><h2>TJTestPrep Simulator</h2></div>
             </div>
             <div class="container">
