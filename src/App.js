@@ -12,12 +12,14 @@ const TestPage = ({email, page, timer, setPage}) => {
   const [entryID, setEntryID] = useState(Math.floor(100000 + Math.random() * 999999));
   const testID = 1 
   const [answers, setAnswers] = useState(Array(5).fill(''));
+  const characterLimits = [1500, 1500, 1500, 1500, 3700]; // Character Limits
+  const [remainingCharacters, setRemainingCharacters] = useState([...characterLimits]);
 
-  // useEffect(() => {
-  //   // Calculate and update remaining characters whenever answers change
-  //   const newRemainingCharacters = characterLimits.map((limit, index) => limit - (answers[index] ? answers[index].length : 0));
-  //   setRemainingCharacters(newRemainingCharacters);
-  // }, [answers]);
+  useEffect(() => {
+    // Calculate and update remaining characters whenever answers change
+    const newRemainingCharacters = characterLimits.map((limit, index) => limit - (answers[index] ? answers[index].length : 0));
+    setRemainingCharacters(newRemainingCharacters);
+  }, [answers]);
   
   const [faqWindow, setFaqWindow] = useState(null);
 
@@ -49,6 +51,8 @@ const TestPage = ({email, page, timer, setPage}) => {
   const handleAnswerChange = (index, event) => {
     const newAnswers = [...answers];
     newAnswers[index] = event.target.value;
+    // line below removes the  '<p></p>' that surrounds the logged answers when they are inserted into the database
+    newAnswers[index] = event.target.value.replace(/<p>|<\/p>/g, '');
     setAnswers(newAnswers);
   };
   
@@ -96,8 +100,6 @@ const TestPage = ({email, page, timer, setPage}) => {
     submitAnswers();
   };
 
-  const characterLimits = [1500, 1500, 1500, 3700]; // Character Limits
-
   // Weirdly enough the 'Thomas Jefferson High School for Science and Technology' Title text cannot be
   // centered, even if you do style={{textAlign: "center"}}
 
@@ -118,26 +120,107 @@ const TestPage = ({email, page, timer, setPage}) => {
         {/* Could probably add some information about the user here */} (RoP)
         <p className="red">MINUTES REMAINING: {timer}</p>
         <h3><b>Student Information Sheet:</b></h3>
-          <div>
+        <div>
           <p>Describe a challenge that you have overcome in your life.</p>
-          <input type="text" onChange={(event) => handleAnswerChange(0, event)} />
+          <CKEditor
+            editor={ClassicEditor}
+            data={answers[0] || ''}
+            config={{
+              toolbar: [
+                'undo', 'redo', '|',
+                'bold', 'italic', 'underline', '|',
+                'cut', 'copy', 'paste', '|',
+                'bulletedList', 'indent', 'outdent',
+              ],
+            }}
+            onChange={(event, editor) => {
+              const data = editor.getData();
+              handleAnswerChange(0, { target: { value: data } });
+            }}
+            disabled={remainingCharacters[0] <= 0}
+          />
         </div>
         <div>
           <p>Everyone applying to TJ says they are a good fit. What made you decide to apply?</p>
-          <input type="text" onChange={(event) => handleAnswerChange(1, event)} />
+          <CKEditor
+            editor={ClassicEditor}
+            data={answers[1] || ''}
+            config={{
+              toolbar: [
+                'undo', 'redo', '|',
+                'bold', 'italic', 'underline', '|',
+                'cut', 'copy', 'paste', '|',
+                'bulletedList', 'indent', 'outdent',
+              ],
+            }}
+            onChange={(event, editor) => {
+              const data = editor.getData();
+              handleAnswerChange(1, { target: { value: data } });
+            }}
+            disabled={remainingCharacters[1] <= 0}
+          />
         </div>
         <div>
           <p>What’s the biggest risk you’ve ever taken? How did it turn out?</p>
-          <input type="text" onChange={(event) => handleAnswerChange(2, event)} />
+          <CKEditor
+            editor={ClassicEditor}
+            data={answers[2] || ''}
+            config={{
+              toolbar: [
+                'undo', 'redo', '|',
+                'bold', 'italic', 'underline', '|',
+                'cut', 'copy', 'paste', '|',
+                'bulletedList', 'indent', 'outdent',
+              ],
+            }}
+            onChange={(event, editor) => {
+              const data = editor.getData();
+              handleAnswerChange(2, { target: { value: data } });
+            }}
+            disabled={remainingCharacters[2] <= 0}
+          />
         </div>
         <div>
           <p>What is something you do every day? When did you start doing this? What does it mean to you?</p>
-          <input type="text" onChange={(event) => handleAnswerChange(3, event)} />
+          <CKEditor
+            editor={ClassicEditor}
+            data={answers[3] || ''}
+            config={{
+              toolbar: [
+                'undo', 'redo', '|',
+                'bold', 'italic', 'underline', '|',
+                'cut', 'copy', 'paste', '|',
+                'bulletedList', 'indent', 'outdent',
+              ],
+            }}
+            onChange={(event, editor) => {
+              const data = editor.getData();
+              handleAnswerChange(3, { target: { value: data } });
+            }}
+            disabled={remainingCharacters[3] <= 0}
+          />
         </div>
         <div>
           <p>What makes you happy?</p>
-          <input type="text" onChange={(event) => handleAnswerChange(4, event)} />
+          <CKEditor
+            editor={ClassicEditor}
+            data={answers[4] || ''}
+            config={{
+              toolbar: [
+                'undo', 'redo', '|',
+                'bold', 'italic', 'underline', '|',
+                'cut', 'copy', 'paste', '|',
+                'bulletedList', 'indent', 'outdent',
+              ],
+            }}
+            onChange={(event, editor) => {
+              const data = editor.getData();
+              handleAnswerChange(4, { target: { value: data } });
+            }}
+            disabled={remainingCharacters[4] <= 0}
+          />
         </div>
+
         {renderFAQButton()}
         <button onClick={handleSubmit}>Submit Answers</button>
       </div>
