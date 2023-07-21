@@ -3,22 +3,48 @@ import { GoogleLogin } from 'react-google-login';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { gapi } from "gapi-script";
+import ReactDOM from 'react-dom';
+import FAQPage from './FAQpage.js';
 import './App.css';
 
 
 const TestPage = ({email, page, timer, setPage}) => {
-  const [entryID, setEntryID] = useState(
-    Math.floor(100000 + Math.random() * 999999)  
-  );
+  const [entryID, setEntryID] = useState(Math.floor(100000 + Math.random() * 999999));
   const testID = 1 
-  // const [answer1, setAnswer1] = React.useState("");
-  // const [answer2, setAnswer2] = React.useState("");
-  // const [answer3, setAnswer3] = React.useState("");
-  // const [answer4, setAnswer4] = React.useState("");
-  // const [answer5, setAnswer5] = React.useState("");
-  // const answers = [answer1, answer2, answer3, answer4, answer5];
   const [answers, setAnswers] = useState(Array(5).fill(''));
 
+  // useEffect(() => {
+  //   // Calculate and update remaining characters whenever answers change
+  //   const newRemainingCharacters = characterLimits.map((limit, index) => limit - (answers[index] ? answers[index].length : 0));
+  //   setRemainingCharacters(newRemainingCharacters);
+  // }, [answers]);
+  
+  const [faqWindow, setFaqWindow] = useState(null);
+
+  const openFAQPage = () => {
+    const newWindow = window.open('', '_blank', 'width=600,height=400');
+    newWindow.document.title = 'FAQ';
+    newWindow.document.body.innerHTML = '<div id="faq-root"></div>';
+  
+    // Render the FAQPage component into the new window
+    ReactDOM.render(<FAQPage />, newWindow.document.getElementById('faq-root'));
+  
+    setFaqWindow(newWindow);
+  };
+  
+
+  // Closes the FAQ page when the window is closed
+  const handleFAQWindowClose = () => {
+    setFaqWindow(null);
+  };
+
+  const renderFAQButton = () => {
+    return (
+      <button onClick={openFAQPage}>FAQ</button>
+    );
+  };
+
+  
 
   const handleAnswerChange = (index, event) => {
     const newAnswers = [...answers];
@@ -38,7 +64,7 @@ const TestPage = ({email, page, timer, setPage}) => {
   if (page === 'test' && timer === 0) {submitAnswers()}
 
   const submitAnswers = () => {
-    const elapsedTime = 90 - timer; // get time remaining
+    const elapsedTime = 90 - timer;
     fetch('http://localhost:5000/api/submit-test', {
       method: 'POST',
       headers: {
@@ -72,6 +98,9 @@ const TestPage = ({email, page, timer, setPage}) => {
 
   const characterLimits = [1500, 1500, 1500, 3700]; // Character Limits
 
+  // Weirdly enough the 'Thomas Jefferson High School for Science and Technology' Title text cannot be
+  // centered, even if you do style={{textAlign: "center"}}
+
   return (
     <div style={{textAlign: 'center'}}>
       <div className="header">
@@ -85,7 +114,7 @@ const TestPage = ({email, page, timer, setPage}) => {
       <div className="container">
         <h1 className="title1">Thomas Jefferson High School for Science and Technology</h1>
         <h2 className="title1">TJTestPrep Practice Essay Portal</h2>
-        <p className="text">Please answer the question(s) below. Once you complete the sheet, scroll down to the bottom and submit.</p>
+        <p className="text" style={{textAlign: "center"}}>Please answer the question(s) below. Once you complete the sheet, scroll down to the bottom and submit.</p>
         {/* Could probably add some information about the user here */} (RoP)
         <p className="red">MINUTES REMAINING: {timer}</p>
         <h3><b>Student Information Sheet:</b></h3>
@@ -109,6 +138,7 @@ const TestPage = ({email, page, timer, setPage}) => {
           <p>What makes you happy?</p>
           <input type="text" onChange={(event) => handleAnswerChange(4, event)} />
         </div>
+        {renderFAQButton()}
         <button onClick={handleSubmit}>Submit Answers</button>
       </div>
     </div>
@@ -187,10 +217,10 @@ const App = () => {
                 <div class="title"><h2>TJTestPrep Portal</h2></div>
               </div>
               <div class="container">
-                <h1 class="title1">Thomas Jefferson High School for Science and Technology</h1>
-                <h2 class="title1">TJTestPrep Student Practice Portal</h2>
-                <p class="text">Please wait until further instructions are given by your session proctor</p>
-                <p class="text">When instructed, select the Start button below.</p>
+                <h1 className="title1">Thomas Jefferson High School for Science and Technology</h1>
+                <h2 class="title1" style={{textAlign: "center"}}>TJTestPrep Student Practice Portal</h2>
+                <p class="text" style={{textAlign: "center"}}>Please wait until further instructions are given by your session proctor</p>
+                <p class="text" style={{textAlign: "center"}}>When instructed, select the Start button below.</p>
                 <button class="btn" onClick={startTest}>Start</button>
               </div>
             </body>
