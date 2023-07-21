@@ -61,11 +61,9 @@ const TestPage = ({email, page, timer, setPage}) => {
     "Goal-Directed and Resilient Individual: Failure is an inevitable part of life. Describe one time you failed at something and how that has changed you. In your response, reflect on how this growth will impact you in the future. Please respond in short answer/essay format and use examples and include specific details.",
     "Collaborator: When asked about teamwork, students often write about being the leader. What is another important aspect in group work? Discuss a time when you have worked in a group and how you observed the importance of that trait",
     "Communicator: Effective communication is critical to get your point across in a variety of situations. As a student, you must communicate verbally, electronically, and in written form. In this essay, please demonstrate how you would communicate with a teacher in written form: You have received a grade for a project that you feel is unjust. The teacher has asked that you write an essay describing your project, your contribution to the project, and why you feel your grade should be changed.",
-    "Innovator: Innovative ideas and creations sometimes occur when individuals are attempting to think of ways to make tasks simpler or easier to complete. Some TJHSST students engage in this activity while conducting their research topic during their Senior year. In considering the research laboratories at TJHSST, what lab do you think would support this research best, what innovative research are you most interested in exploring, how have previous experiences led you to want to research this topic? Please respond in short answer/essay format and include details and examples."
-  ]
-  const pse = [
+    "Innovator: Innovative ideas and creations sometimes occur when individuals are attempting to think of ways to make tasks simpler or easier to complete. Some TJHSST students engage in this activity while conducting their research topic during their Senior year. In considering the research laboratories at TJHSST, what lab do you think would support this research best, what innovative research are you most interested in exploring, how have previous experiences led you to want to research this topic? Please respond in short answer/essay format and include details and examples.",
     "A renewable energy company is deciding between two projects. Project A is a wind farm with an initial cost of $50 million, expected to generate 100,000 MWh of electricity per year at an operating cost of $5 per MWh. The electricity can be sold for $25 per MWh. Project B is a solar farm with an initial cost of $80 million, expected to generate 80,000 MWh of electricity per year at an operating cost of $3 per MWh. The electricity can be sold for $30 per MWh. If the company has a lifespan of 20 years, which project should the company choose?"
-  ];
+  ]
 
   if (page === 'test' && timer === 0) {submitAnswers()}
 
@@ -143,32 +141,6 @@ const TestPage = ({email, page, timer, setPage}) => {
               disabled={remainingCharacters[index] <= 0} // Disable the CKEditor when character limit is reached
             />
             <p class="smalltext" style={{fontSize: "small", textAlign: "right"}}>Remaining Characters: {remainingCharacters[index]}</p>
-          </div>
-        ))}
-
-        <h3 class="text">Problem Solving Essay:</h3>
-
-        {pse.map((question, index) => (
-          <div key={index}>
-            <p class="text">{question}</p>
-            <CKEditor
-              editor={ClassicEditor}
-              data={answers[index] || ''}
-              config={{
-                toolbar: [
-                  'undo', 'redo', '|',
-                  'bold', 'italic', 'underline', '|',
-                  'cut', 'copy', 'paste', '|',
-                  'bulletedList', 'indent', 'outdent',
-                ],
-              }}
-              onChange={(event, editor) => {
-                const data = editor.getData();
-                handleAnswerChange(index, { target: { value: data } });
-              }}
-              disabled={remainingCharacters[index] <= 0} // Disable the CKEditor when character limit is reached
-            />
-            <p class="smalltext">Remaining Characters: {remainingCharacters[index]}</p>
           </div>
         ))}
 
