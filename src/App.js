@@ -65,6 +65,8 @@ const TestPage = ({email, page, timer, setPage}) => {
     "A renewable energy company is deciding between two projects. Project A is a wind farm with an initial cost of $50 million, expected to generate 100,000 MWh of electricity per year at an operating cost of $5 per MWh. The electricity can be sold for $25 per MWh. Project B is a solar farm with an initial cost of $80 million, expected to generate 80,000 MWh of electricity per year at an operating cost of $3 per MWh. The electricity can be sold for $30 per MWh. If the company has a lifespan of 20 years, which project should the company choose?"
   ]
 
+  //select * from where test_id = 1
+
   if (page === 'test' && timer === 0) {submitAnswers()}
 
   const submitAnswers = () => {
