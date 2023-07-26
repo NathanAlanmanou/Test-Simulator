@@ -9,7 +9,7 @@ const pgConfig = {
   user: 'postgres',
   host: 'localhost',
   database: 'testsimulator',
-  password: '************',  
+  password: 'hidden for privacy reasons',  
   port: 5432,
 };
 

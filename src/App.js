@@ -164,13 +164,13 @@ const App = () => {
 
   gapi.load("client:auth2", () => {
     gapi.client.init({
-      clientId: "523668124113-jh0ttje6rh13ss9onubqsj9v2raum1it.apps.googleusercontent.com",
+      clientId: "hidden for privacy reasons",
       scope: 'profile email',
       plugin_name: "tjsim"
     });
   });
 
-  const validEmails = ['mkjeung@uchicago.edu', 'nalanmanou@uchicago.edu', 'matthewkimjeung@gmail.com', 'shrys.jain@gmail.com']; // List of valid emails
+  const validEmails = ['hidden for privacy reasons']; // List of valid emails
 
   const handleLoginSuccess = (response) => {
     console.log("RESPONSE:"  + response);
