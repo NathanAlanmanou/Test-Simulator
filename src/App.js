@@ -1,16 +1,15 @@
 import React, { useState, useEffect, Component } from 'react';
 import { GoogleLogin } from 'react-google-login';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { gapi } from "gapi-script";
+import { Editor, EditorState, RichUtils } from 'draft-js';
+import 'draft-js/dist/Draft.css';
 import ReactDOM from 'react-dom';
 import FAQPage from './FAQpage.js';
 import './App.css';
 
 
-const TestPage = ({email, page, timer, setPage}) => {
-  const [entryID, setEntryID] = useState(Math.floor(100000 + Math.random() * 999999));
-  const testID = 1 
+const TestPage = ({email, testID, questions, page, timer, setPage}) => {
+  const [entryID, setEntryID] = useState(Math.floor(1000000 + Math.random() * 8999999));
   const [answers, setAnswers] = useState(Array(5).fill(''));
   const characterLimits = [1500, 1500, 1500, 1500, 3700]; // Character Limits
   const [remainingCharacters, setRemainingCharacters] = useState([...characterLimits]);
@@ -35,6 +34,7 @@ const TestPage = ({email, page, timer, setPage}) => {
   };
   
 
+
   // Closes the FAQ page when the window is closed
   const handleFAQWindowClose = () => {
     setFaqWindow(null);
@@ -48,24 +48,14 @@ const TestPage = ({email, page, timer, setPage}) => {
 
   
 
-  const handleAnswerChange = (index, event) => {
+  const handleAnswerChange = (index, newEditorState) => {
     const newAnswers = [...answers];
-    newAnswers[index] = event.target.value;
-    // line below removes the  '<p></p>' that surrounds the logged answers when they are inserted into the database
-    newAnswers[index] = event.target.value.replace(/<p>|<\/p>/g, '');
+    const contentState = newEditorState.getCurrentContent();
+    const plainTextContent = contentState.getPlainText();
+    newAnswers[index] = plainTextContent;
     setAnswers(newAnswers);
   };
   
-  //Establish Questions, (later will be achieved by importing from public."Questions")
-  const questions=[
-    "Goal-Directed and Resilient Individual: Failure is an inevitable part of life. Describe one time you failed at something and how that has changed you. In your response, reflect on how this growth will impact you in the future. Please respond in short answer/essay format and use examples and include specific details.",
-    "Collaborator: When asked about teamwork, students often write about being the leader. What is another important aspect in group work? Discuss a time when you have worked in a group and how you observed the importance of that trait",
-    "Communicator: Effective communication is critical to get your point across in a variety of situations. As a student, you must communicate verbally, electronically, and in written form. In this essay, please demonstrate how you would communicate with a teacher in written form: You have received a grade for a project that you feel is unjust. The teacher has asked that you write an essay describing your project, your contribution to the project, and why you feel your grade should be changed.",
-    "Innovator: Innovative ideas and creations sometimes occur when individuals are attempting to think of ways to make tasks simpler or easier to complete. Some TJHSST students engage in this activity while conducting their research topic during their Senior year. In considering the research laboratories at TJHSST, what lab do you think would support this research best, what innovative research are you most interested in exploring, how have previous experiences led you to want to research this topic? Please respond in short answer/essay format and include details and examples.",
-    "A renewable energy company is deciding between two projects. Project A is a wind farm with an initial cost of $50 million, expected to generate 100,000 MWh of electricity per year at an operating cost of $5 per MWh. The electricity can be sold for $25 per MWh. Project B is a solar farm with an initial cost of $80 million, expected to generate 80,000 MWh of electricity per year at an operating cost of $3 per MWh. The electricity can be sold for $30 per MWh. If the company has a lifespan of 20 years, which project should the company choose?"
-  ]
-
-  //select * from where test_id = 1
 
   if (page === 'test' && timer === 0) {submitAnswers()}
 
@@ -102,57 +92,127 @@ const TestPage = ({email, page, timer, setPage}) => {
     submitAnswers();
   };
 
+
+  const [editorStates, setEditorStates] = useState(questions.map(() => EditorState.createEmpty()));
+
+  const styleMap = {
+    BOLD: {
+      fontWeight: 'bold',
+    },
+    ITALIC: {
+      fontStyle: 'italic',
+    },
+    UNDERLINE: {
+      textDecoration: 'underline',
+    },
+  };
+  
+  // Function to toggle inline styles
+  const toggleInlineStyle = (editorState, inlineStyle) => {
+    const newState = RichUtils.toggleInlineStyle(editorState, inlineStyle);
+    return newState;
+  };
+  
+  // Inline style controls
+  const InlineStyleControls = ({editorState, onToggle}) => {
+    const currentStyle = editorState.getCurrentInlineStyle();
+    
+    const INLINE_STYLES = [
+      {label: '𝐁', style: 'BOLD'},
+      {label: '𝐈', style: 'ITALIC'},
+      {label: '𝑈', style: 'UNDERLINE'},
+    ];
+  
+    return (
+      <div style={{marginBottom: '10px'}}>
+        {INLINE_STYLES.map(type => 
+          <span 
+            key={type.style}
+            style={styles.styleButton}
+            onMouseDown={(e) => {
+              e.preventDefault();
+              onToggle(type.style);
+            }}
+          >
+            {type.label}
+          </span>
+        )}
+      </div>
+    );
+  };
+
+  const styles = {
+    styleButton: {
+      color: '#333',
+      margin: '0 4px',
+      padding: '5px 10px',
+      display: 'inline-block',
+      cursor: 'pointer',
+      backgroundColor: 'white',
+      border: '1px solid #ddd',
+      borderRadius: '4px',
+      userSelect: 'none',
+      transition: 'background-color 0.2s',
+      ':hover': {
+        backgroundColor: '#f5f5f5',
+      }
+    }
+  };
+  
+
   // Weirdly enough the 'Thomas Jefferson High School for Science and Technology' Title text cannot be
   // centered, even if you do style={{textAlign: "center"}}
 
   return (
     <div>
-      <div class="header">
-        <div class="logo"><img src="https://i.ibb.co/qWhBPVK/Edu-Avenues.png" alt="banner"></img></div>
-        <div class="title"><h2>TJTestPrep Practice Portal</h2></div>
+      <div className="header">
+        <div className="logo"><img src="https://i.ibb.co/qWhBPVK/Edu-Avenues.png" alt="banner"></img></div>
+        <div className="title"><h2>TJTestPrep Practice Portal</h2></div>
       </div>
       <div className="container">
-        <br></br>
         <h1 className="title1" style={{textAlign: "center"}}>Thomas Jefferson High School for Science and Technology</h1>
         <h2 className="title1">TJTestPrep Practice Essay Exam</h2>
         <p className="text" style={{fontSize: "small"}}>User: {email}</p>
         {renderFAQButton()}
-        <br></br>
         <p className="text">Please answer the question(s) below. Once you complete the sheet, scroll down to the bottom and submit.</p>
         <h4 className="red"><b>{timer} MINUTES REMAINING</b></h4>
-        <h3 class="text"><b>Student Portrait Sheet + Problem Solving Essay:</b></h3>
+        <h3 className="text"><b>Student Portrait Sheet + Problem Solving Essay:</b></h3>
         {questions.map((question, index) => (
           <div key={index}>
-            <p class="text">{question}</p>
-            <CKEditor
-              editor={ClassicEditor}
-              data={answers[index] || ''}
-              config={{
-                toolbar: [
-                  'undo', 'redo', '|',
-                  'bold', 'italic', 'underline', '|',
-                  'cut', 'copy', 'paste', '|',
-                  'bulletedList', 'indent', 'outdent',
-                ],
+            <p className="text">{question}</p>
+            
+            <InlineStyleControls
+              editorState={editorStates[index]}
+              onToggle={inlineStyle => {
+                const newEditorState = toggleInlineStyle(editorStates[index], inlineStyle);
+                const newEditorStates = [...editorStates];
+                newEditorStates[index] = newEditorState;
+                setEditorStates(newEditorStates);
               }}
-              onChange={(event, editor) => {
-                const data = editor.getData();
-                handleAnswerChange(index, { target: { value: data } });
-              }}
-              disabled={remainingCharacters[index] <= 0} // Disable the CKEditor when character limit is reached
             />
-            <p class="smalltext" style={{fontSize: "small", textAlign: "right"}}>Remaining Characters: {remainingCharacters[index]}</p>
+            
+            <Editor
+              editorState={editorStates[index]}
+              onChange={(newEditorState) => {
+                const newEditorStates = [...editorStates];
+                newEditorStates[index] = newEditorState;
+                setEditorStates(newEditorStates);
+                handleAnswerChange(index, newEditorState);
+              }}
+              customStyleMap={styleMap}
+              readOnly={remainingCharacters[index] <= 0}
+              placeholder="Type your answer here..." // This will show a placeholder when the editor is empty
+            />
+
+            <p className="smalltext" style={{fontSize: "small", textAlign: "right"}}>Remaining Characters: {remainingCharacters[index]}</p>
           </div>
         ))}
-
-        <div class="align-right">
-          <button class="center" onClick={handleSubmit}>Submit</button>
+        <div className="align-right">
+          <button className="center" onClick={handleSubmit}>Submit</button>
         </div>
-
-        <br></br>
       </div>
     </div>
-  );
+  )
   };
 
 
@@ -160,29 +220,54 @@ const App = () => {
   const [page, setPage] = useState('login');
   const [timer, setTimer] = useState(90);
   const [email, setEmail] = useState('');
-
+  const [questions, setQuestions] = useState([]);
+  const [testID, setTestID] = useState([]);
 
   gapi.load("client:auth2", () => {
     gapi.client.init({
-      clientId: "hidden for privacy reasons",
+      clientId: '523668124113-jh0ttje6rh13ss9onubqsj9v2raum1it.apps.googleusercontent.com',
       scope: 'profile email',
       plugin_name: "tjsim"
     });
   });
 
-  const validEmails = ['hidden for privacy reasons']; // List of valid emails
+  const validEmails = ['mkjeung@uchicago.edu', 'nalanmanou@uchicago.edu', 'matthewkimjeung@gmail.com', 'shrys.jain@gmail.com']; // List of valid emails
 
-  const handleLoginSuccess = (response) => {
+  const handleLoginSuccess = async (response) => {
     console.log("RESPONSE:"  + response);
     const { email } = response.profileObj;
     alert("Welcome " + email);
     if (validEmails.includes(email)) {
       setEmail(email);
       setPage('start');
+  
+      // Sending the email to the API after successful login
+      try {
+        const apiResponse = await fetch('http://localhost:5000/api/user/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ email })
+        });
+        const apiData = await apiResponse.json();
+  
+        // Extracting questions and testID from apiData
+        const { questions, testID } = apiData;
+  
+        setQuestions(questions); // Setting questions
+        setTestID(testID);       // Assuming you have a setter function for testID
+        
+        console.log('API Response:', apiData);
+      } catch (error) {
+        console.error('Error sending email to API:', error);
+      }
+  
     } else {
       setPage('login');
     }
   };
+  
 
   const handleLoginFailure = (error) => {
     console.log(error);
@@ -249,14 +334,9 @@ const App = () => {
         case 'test':
           return (
             <TestPage
-              questions={[
-                "Prompt 1",
-                "Prompt 2",
-                "Prompt 3",
-                "Prompt 4",
-                "Prompt 5"
-              ]}
+              questions={questions}
             email={email}
+            testID={testID}
             timer={timer}
             setPage={setPage}
           />

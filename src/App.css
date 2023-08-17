@@ -2,6 +2,44 @@
   text-align: center;
 }
 
+.DraftEditor-root {
+  border: 1px solid #ccc;
+  padding: 10px;
+  min-height: 150px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.DraftEditor-root .public-DraftStyleDefault-bold {
+  font-weight: bold;
+}
+
+.DraftEditor-root .public-DraftStyleDefault-italic {
+  font-style: italic;
+}
+
+.DraftEditor-root .public-DraftStyleDefault-underline {
+  text-decoration: underline;
+}
+
+.DraftEditor-root {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: text;
+}
+
+.DraftEditor-editorContainer {
+  height: auto; /* or set a specific height like 150px */
+  min-height: 100px; /* minimum height */
+}
+
+.public-DraftEditor-content {
+  height: 100%;
+  min-height: 100px;
+}
+
+
 .logo {
   max-height: 90px!important;
 }
